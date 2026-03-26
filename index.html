@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dedham Pirates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black:   #0a0a0a;
+      --gold:    #FDB827;
+      --red:     #C41E3A;
+      --cream:   #F5F0E8;
+      --dimgold: #b8861d;
+      --panel:   #111111;
+      --border:  #222222;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.97);
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 62px;
+    }
+
+    .nav-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.9rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-shadow: 0 0 18px rgba(253,184,39,0.35);
+    }
+
+    .nav-brand span { color: var(--red); }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+
+    .nav-links button {
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.45rem 1rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links button:hover,
+    .nav-links button.active {
+      color: var(--gold);
+      background: rgba(253,184,39,0.1);
+    }
+
+    .nav-links button.active {
+      border-bottom: 2px solid var(--gold);
+    }
+
+    /* ─── PAGE SECTIONS ─── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ─── LANDING ─── */
+    #page-home {
+      position: relative;
+      min-height: calc(100vh - 62px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      width: min(75vw, 700px);
+      opacity: 0.07;
+      filter: grayscale(40%);
+      animation: pulse 6s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.07; transform: scale(1); }
+      50%       { opacity: 0.11; transform: scale(1.025); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      padding: 2rem;
+      animation: fadeUp 0.9s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .season-badge {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 9rem);
+      line-height: 0.9;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      text-shadow: 0 4px 40px rgba(253,184,39,0.25);
+    }
+
+    .hero-subtitle {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      letter-spacing: 0.25em;
+      color: var(--cream);
+      margin-top: 0.4rem;
+      opacity: 0.75;
+    }
+
+    .hero-divider {
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      margin: 1.6rem auto;
+    }
+
+    .hero-tagline {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--cream);
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+
+    .hero-cta {
+      margin-top: 2.4rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.7rem 2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--black);
+    }
+    .btn-gold:hover { background: var(--dimgold); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      border: 1.5px solid var(--gold);
+    }
+    .btn-outline:hover { background: rgba(253,184,39,0.1); }
+
+    /* ─── SHARED CONTENT WRAPPER ─── */
+    .content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.8rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+
+    .section-header p {
+      color: var(--cream);
+      opacity: 0.5;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+    }
+
+    .section-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--red);
+      margin: 0.8rem auto 0;
+    }
+
+    /* ─── ROSTER ─── */
+    .roster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .player-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--gold);
+      padding: 1.2rem 1rem;
+      border-radius: 4px;
+      transition: transform 0.2s, border-color 0.2s;
+      text-align: center;
+    }
+
+    .player-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--red);
+    }
+
+    .player-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .player-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.3rem;
+      color: var(--cream);
+    }
+
+    .player-pos {
+      font-size: 0.8rem;
+      color: var(--gold);
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.15rem;
+      opacity: 0.75;
+    }
+
+    /* ─── SCHEDULE ─── */
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .schedule-table thead tr {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .schedule-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    .schedule-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .schedule-table tbody tr:hover {
+      background: rgba(253,184,39,0.05);
+    }
+
+    .schedule-table td {
+      padding: 0.85rem 1rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      color: var(--cream);
+    }
+
+    .result-W {
+      color: #4caf50;
+      font-weight: 700;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .result-L {
+      color: var(--red);
+      font-weight: 700;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .result-upcoming {
+      color: var(--gold);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.65;
+    }
+
+    /* ─── STATS ─── */
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow-x: auto;
+      display: block;
+    }
+
+    .stats-table thead tr {
+      background: var(--panel);
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .stats-table th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.6rem 0.75rem;
+      text-align: right;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    .stats-table th:first-child { text-align: left; }
+
+    .stats-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .stats-table tbody tr:hover { background: rgba(253,184,39,0.05); }
+
+    .stats-table td {
+      padding: 0.7rem 0.75rem;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.88rem;
+      text-align: right;
+      color: var(--cream);
+      white-space: nowrap;
+    }
+
+    .stats-table td:first-child {
+      text-align: left;
+      font-weight: 600;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .stat-highlight {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .stats-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-tab {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 1.2rem;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      color: var(--cream);
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+
+    .stats-tab:hover,
+    .stats-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(253,184,39,0.07);
+    }
+
+    /* ─── TALES ─── */
+    .tales-grid {
+      display: grid;
+      gap: 1.8rem;
+    }
+
+    .tale-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--red);
+      padding: 1.8rem 2rem;
+      border-radius: 4px;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .tale-card:hover { transform: translateX(4px); }
+
+    .tale-meta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--red);
+      margin-bottom: 0.6rem;
+    }
+
+    .tale-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      margin-bottom: 0.7rem;
+    }
+
+    .tale-excerpt {
+      color: var(--cream);
+      opacity: 0.65;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .tale-read-more {
+      display: inline-block;
+      margin-top: 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .tale-card:hover .tale-read-more { opacity: 1; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      opacity: 0.35;
+    }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 600px) {
+      nav { padding: 0 0.8rem; }
+      .nav-brand { font-size: 1.4rem; }
+      .nav-links button { font-size: 0.78rem; padding: 0.4rem 0.6rem; }
+      .roster-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Dedham <span>Pirates</span></div>
+  <ul class="nav-links">
+    <li><button class="active" onclick="showPage('home', this)">Home</button></li>
+    <li><button onclick="showPage('roster', this)">Roster</button></li>
+    <li><button onclick="showPage('schedule', this)">Schedule</button></li>
+    <li><button onclick="showPage('stats', this)">Stats</button></li>
+    <li><button onclick="showPage('tales', this)">Tales</button></li>
+  </ul>
+</nav>
+
+<!-- ─── HOME ─── -->
+<section id="page-home" class="page active">
+  <div class="hero-bg">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/wAARCAGgAaADASIAAhEBAxEB/8QAHQABAAMAAgMBAAAAAAAAAAAAAAYHCAQFAQMJAv/EAGQQAAECBQICBQQIDwwGBwgDAQECAwAEBQYRByESMQgTQVFhFCJxgRUXMkKRobGyIzM0NlJUVmJyc3SCwdHSFiQ1N0N1kpOUlaKzCShTVWPhJSZEZIPC8CdFZYSFo+LxGCh2w//EABsBAQABBQEAAAAAAAAAAAAAAAAGAQMEBQcC/8QAPhEAAgIBAgQCBgYJBAMBAQAAAAECAwQFEQYSITETcSJBUWGBsRQyMzVyoRYkNEJSU5HB0RUjJWKC4fBD8f/aAAwDAQACEQMRAD8A2XCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCCQASSQAOZJ7IhepetNkWQ0US1RbqNUP/o9MfT6VnG3VPipWMgcoAl0K1rbKLg1brdRqanglMvMJlmT3oRsD+kx6Ndc2W9Slf8A0dJ/WIqmqaiarajVB+falqWlaWR9Kk3nVJPiRzHYYpSRcclp1bMww88ypOOFba1IUN/EEZEdM0nVpqnPiNX6hI" alt="Pirates Logo" />
+  </div>
+  <div class="hero-content">
+    <div class="season-badge">&#9733; Season 2025 &#9733;</div>
+    <h1 class="hero-title">Dedham<br/>Pirates</h1>
+    <p class="hero-subtitle">Men's Baseball &bull; Dedham, MA</p>
+    <div class="hero-divider"></div>
+    <p class="hero-tagline">Swing Hard. Play Together. Meet at the Parking Lot.</p>
+    <div class="hero-cta">
+      <button class="btn btn-gold" onclick="showPage('schedule', document.querySelectorAll('.nav-links button')[2])">View Schedule</button>
+      <button class="btn btn-outline" onclick="showPage('tales', document.querySelectorAll('.nav-links button')[4])">Tales from the Lot</button>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ROSTER ─── -->
+<section id="page-roster" class="page">
+  <div class="content">
+    <div class="section-header">
+      <h2>Roster</h2>
+      <p>2025 Season</p>
+      <div class="section-rule"></div>
+    </div>
+    <div class="roster-grid" id="rosterGrid">
+      <!-- players injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCHEDULE ─── -->
+<section id="page-schedule" class="page">
+  <div class="content">
+    <div class="section-header">
+      <h2>Schedule</h2>
+      <p>2025 Regular Season</p>
+      <div class="section-rule"></div>
+    </div>
+    <table class="schedule-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Opponent</th>
+          <th>Location</th>
+          <th>Time</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody id="scheduleBody">
+        <!-- games injected by JS -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── STATS ─── -->
+<section id="page-stats" class="page">
+  <div class="content">
+    <div class="section-header">
+      <h2>Stats</h2>
+      <p>2025 Season</p>
+      <div class="section-rule"></div>
+    </div>
+    <div class="stats-tabs">
+      <button class="stats-tab active" onclick="showStats('batting', this)">Batting</button>
+      <button class="stats-tab" onclick="showStats('pitching', this)">Pitching</button>
+    </div>
+    <div id="stats-batting">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>G</th><th>AB</th><th>H</th><th>2B</th><th>3B</th><th>HR</th><th>RBI</th><th>R</th><th>BB</th><th>SO</th><th>AVG</th><th>OBP</th><th>SLG</th>
+          </tr>
+        </thead>
+        <tbody id="battingBody"></tbody>
+      </table>
+    </div>
+    <div id="stats-pitching" style="display:none">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>G</th><th>GS</th><th>IP</th><th>H</th><th>R</th><th>ER</th><th>BB</th><th>SO</th><th>W</th><th>L</th><th>ERA</th>
+          </tr>
+        </thead>
+        <tbody id="pitchingBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TALES ─── -->
+<section id="page-tales" class="page">
+  <div class="content">
+    <div class="section-header">
+      <h2>Tales from the Parking Lot</h2>
+      <p>Stories from the Dedham Pirates faithful</p>
+      <div class="section-rule"></div>
+    </div>
+    <div class="tales-grid" id="talesGrid">
+      <!-- tales injected by JS -->
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Dedham Pirates Baseball &bull; DedhamPirates.com
+</footer>
+
+<script>
+// ─── DATA ─────────────────────────────────────────────────────────────
+const ROSTER = [
+  { num:'1',  name:'Player Name', pos:'OF' },
+  { num:'2',  name:'Player Name', pos:'SS' },
+  { num:'5',  name:'Player Name', pos:'3B' },
+  { num:'7',  name:'Player Name', pos:'P / OF' },
+  { num:'9',  name:'Player Name', pos:'1B' },
+  { num:'11', name:'Player Name', pos:'C' },
+  { num:'14', name:'Player Name', pos:'2B' },
+  { num:'17', name:'Player Name', pos:'P' },
+  { num:'19', name:'Player Name', pos:'LF' },
+  { num:'21', name:'Player Name', pos:'P / 1B' },
+  { num:'24', name:'Player Name', pos:'CF' },
+  { num:'28', name:'Player Name', pos:'RF' },
+  { num:'33', name:'Player Name', pos:'P' },
+  { num:'42', name:'Player Name', pos:'DH' },
+];
+
+const SCHEDULE = [
+  { date:'Sat, May 3',  opp:'Westwood Wolves',   loc:'Sprague Field',  time:'10:00 AM', result:'W 8–4' },
+  { date:'Sun, May 11', opp:'Canton Cardinals',   loc:'Springfield Ave',time:'1:00 PM',  result:'L 3–7' },
+  { date:'Sat, May 17', opp:'Norwood Sox',        loc:'Sprague Field',  time:'10:00 AM', result:'W 11–2' },
+  { date:'Sun, May 25', opp:'Milton Marlins',     loc:'Away – Milton',  time:'1:00 PM',  result:'W 5–3' },
+  { date:'Sat, Jun 7',  opp:'Quincy Hawks',       loc:'Sprague Field',  time:'10:00 AM', result:'' },
+  { date:'Sun, Jun 15', opp:'Braintree Bombers',  loc:'Away – Braintree',time:'1:00 PM', result:'' },
+  { date:'Sat, Jun 21', opp:'Randolph Rangers',   loc:'Sprague Field',  time:'10:00 AM', result:'' },
+  { date:'Sun, Jun 29', opp:'Weymouth Waves',     loc:'Away – Weymouth',time:'1:00 PM',  result:'' },
+];
+
+const BATTING = [
+  { name:'Player Name', g:4, ab:14, h:6,  d:1, t:0, hr:1, rbi:4,  r:3,  bb:2, so:2,  avg:'.429', obp:'.500', slg:'.714' },
+  { name:'Player Name', g:4, ab:15, h:5,  d:2, t:0, hr:0, rbi:3,  r:4,  bb:3, so:4,  avg:'.333', obp:'.444', slg:'.467' },
+  { name:'Player Name', g:4, ab:13, h:4,  d:1, t:1, hr:0, rbi:2,  r:2,  bb:1, so:3,  avg:'.308', obp:'.357', slg:'.462' },
+  { name:'Player Name', g:3, ab:10, h:3,  d:0, t:0, hr:1, rbi:5,  r:2,  bb:2, so:1,  avg:'.300', obp:'.417', slg:'.500' },
+  { name:'Player Name', g:4, ab:14, h:4,  d:1, t:0, hr:0, rbi:1,  r:3,  bb:1, so:5,  avg:'.286', obp:'.333', slg:'.357' },
+  { name:'Player Name', g:4, ab:12, h:3,  d:0, t:0, hr:0, rbi:2,  r:1,  bb:0, so:3,  avg:'.250', obp:'.250', slg:'.250' },
+  { name:'Player Name', g:3, ab:9,  h:2,  d:1, t:0, hr:0, rbi:1,  r:1,  bb:2, so:2,  avg:'.222', obp:'.364', slg:'.333' },
+];
+
+const PITCHING = [
+  { name:'Player Name', g:2, gs:2, ip:'14.0', h:9,  r:6,  er:5,  bb:3, so:14, w:2, l:0, era:'3.21' },
+  { name:'Player Name', g:2, gs:1, ip:'10.2', h:8,  r:5,  er:4,  bb:4, so:9,  w:1, l:1, era:'3.38' },
+  { name:'Player Name', g:3, gs:1, ip:'8.1',  h:7,  r:4,  er:4,  bb:5, so:6,  w:0, l:0, era:'4.32' },
+  { name:'Player Name', g:2, gs:0, ip:'5.0',  h:4,  r:2,  er:2,  bb:1, so:4,  w:1, l:0, era:'3.60' },
+];
+
+const TALES = [
+  {
+    date:'May 11, 2025',
+    title:'The Rain, the Tarps, and Two Six-Packs',
+    excerpt:'It started as a routine game delay. Three innings in, the sky opened up and we scrambled for the tarps. Nobody left. By the time the rain let up forty-five minutes later, somebody\'s cooler had appeared from the trunk of a Subaru, and the parking lot had become something entirely more memorable than the game itself...',
+  },
+  {
+    date:'May 3, 2025 — Season Opener',
+    title:'First Pitch, First Beer, First Win',
+    excerpt:'We hadn\'t played together since October. Gloves needed breaking back in. Somebody forgot his cleats. The Wolves scored two in the first and the parking lot was already grumbling. Then the Pirates put up four in the third and everything changed. Opening day reminded everyone why we do this...',
+  },
+  {
+    date:'Coming Soon',
+    title:'Your Story Here',
+    excerpt:'Got a tale from the parking lot? A great at-bat, an improbable play, or a post-game moment worth remembering? Send it in — these pages are for the whole crew...',
+  },
+];
+
+// ─── RENDER ───────────────────────────────────────────────────────────
+function renderRoster() {
+  const grid = document.getElementById('rosterGrid');
+  grid.innerHTML = ROSTER.map(p => `
+    <div class="player-card">
+      <div class="player-number">#${p.num}</div>
+      <div class="player-name">${p.name}</div>
+      <div class="player-pos">${p.pos}</div>
+    </div>
+  `).join('');
+}
+
+function renderSchedule() {
+  const tbody = document.getElementById('scheduleBody');
+  tbody.innerHTML = SCHEDULE.map(g => {
+    let res = '';
+    if (!g.result) {
+      res = '<span class="result-upcoming">Upcoming</span>';
+    } else if (g.result.startsWith('W')) {
+      res = `<span class="result-W">${g.result}</span>`;
+    } else {
+      res = `<span class="result-L">${g.result}</span>`;
+    }
+    return `<tr>
+      <td>${g.date}</td>
+      <td>${g.opp}</td>
+      <td>${g.loc}</td>
+      <td>${g.time}</td>
+      <td>${res}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderBatting() {
+  document.getElementById('battingBody').innerHTML = BATTING.map(p => `
+    <tr>
+      <td>${p.name}</td>
+      <td>${p.g}</td><td>${p.ab}</td><td>${p.h}</td>
+      <td>${p.d}</td><td>${p.t}</td><td>${p.hr}</td>
+      <td>${p.rbi}</td><td>${p.r}</td><td>${p.bb}</td><td>${p.so}</td>
+      <td class="stat-highlight">${p.avg}</td>
+      <td>${p.obp}</td><td>${p.slg}</td>
+    </tr>
+  `).join('');
+}
+
+function renderPitching() {
+  document.getElementById('pitchingBody').innerHTML = PITCHING.map(p => `
+    <tr>
+      <td>${p.name}</td>
+      <td>${p.g}</td><td>${p.gs}</td><td>${p.ip}</td>
+      <td>${p.h}</td><td>${p.r}</td><td>${p.er}</td>
+      <td>${p.bb}</td><td>${p.so}</td><td>${p.w}</td><td>${p.l}</td>
+      <td class="stat-highlight">${p.era}</td>
+    </tr>
+  `).join('');
+}
+
+function renderTales() {
+  document.getElementById('talesGrid').innerHTML = TALES.map(t => `
+    <div class="tale-card">
+      <div class="tale-meta">${t.date}</div>
+      <div class="tale-title">${t.title}</div>
+      <p class="tale-excerpt">${t.excerpt}</p>
+      <span class="tale-read-more">Read more &rsaquo;</span>
+    </div>
+  `).join('');
+}
+
+// ─── NAV ──────────────────────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showStats(type, btn) {
+  document.getElementById('stats-batting').style.display  = type === 'batting'  ? '' : 'none';
+  document.getElementById('stats-pitching').style.display = type === 'pitching' ? '' : 'none';
+  document.querySelectorAll('.stats-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+renderRoster();
+renderSchedule();
+renderBatting();
+renderPitching();
+renderTales();
+</script>
+</body>
+</html>
