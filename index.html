@@ -359,7 +359,7 @@
 <section id="page-schedule" class="page">
   <div class="content">
     <div class="section-header">
-      <h2>Schedule</h2><p>2026 Regular Season &mdash; 38+ Montgomery Division</p><div class="section-rule"></div>
+      <h2>Schedule</h2><p>2026 Regular Season &mdash; 38+ Montgomery Division &mdash; Record: <span style="color:var(--gold);font-weight:700;">2-0</span></p><div class="section-rule"></div>
     </div>
     <table class="schedule-table">
       <thead><tr><th>#</th><th>Date</th><th>Opponent</th><th>Location</th><th>Time</th><th>Result</th></tr></thead>
@@ -536,13 +536,43 @@ function renderPitching() {
 }
 
 function renderTales() {
-  document.getElementById('talesGrid').innerHTML = TALES.map(t =>
-    `<div class="tale-card">
-      <div class="tale-meta">${t.date}</div>
-      <div class="tale-title">${t.title}</div>
-      <p class="tale-excerpt">${t.excerpt}</p>
-      <span class="tale-read-more">Read more &rsaquo;</span>
-    </div>`).join('');
+  const grid = document.getElementById('talesGrid');
+  grid.innerHTML = '';
+  TALES.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'tale-card';
+
+    const meta = document.createElement('div');
+    meta.className = 'tale-meta';
+    meta.textContent = t.date;
+
+    const title = document.createElement('div');
+    title.className = 'tale-title';
+    title.textContent = t.title;
+
+    const excerpt = document.createElement('p');
+    excerpt.className = 'tale-excerpt';
+    excerpt.innerHTML = t.excerpt;
+
+    card.appendChild(meta);
+    card.appendChild(title);
+
+    if (t.images && t.images.length > 0) {
+      const imgWrap = document.createElement('div');
+      imgWrap.className = 'tale-images';
+      t.images.forEach(i => {
+        const img = document.createElement('img');
+        img.src = i.src;
+        img.alt = i.alt;
+        img.className = 'tale-img';
+        imgWrap.appendChild(img);
+      });
+      card.appendChild(imgWrap);
+    }
+
+    card.appendChild(excerpt);
+    grid.appendChild(card);
+  });
 }
 
 function showPage(id, btn) {
